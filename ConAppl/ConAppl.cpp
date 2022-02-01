@@ -34,11 +34,11 @@ int main()
 
     if (iNum < 2)
     {
-    std::cout << "Данное число не является простым" << std::endl;
+        std::cout << "Данное число не является простым" << std::endl;
     }
     else
     {
-    Test(iNum);
+        Test(iNum);
     }
  
     return 0;
