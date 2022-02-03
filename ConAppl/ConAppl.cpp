@@ -39,6 +39,13 @@ int main()
     else
     {
         Test(iNum);
+        Test(12313);
+        Test(1123);
+        Test(1111);
+        Test(2);
+        Test(3);
+        Test(4);
+        Test(123*555);
     }
  
     return 0;
