@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 
 //2.//////////////////////////////////////////////////
 typedef struct Node
@@ -24,7 +25,7 @@ BinTreeIntNode* BalanceTree(int iN)
     }
     else
     {
-        fscanf_s(file, "%d", &iX);
+        fscanf(file, "%d", &iX);
 
         iNL = iNL / 2;
         iNR = iN - iNL - 1;
@@ -102,7 +103,7 @@ int main()
     setlocale(LC_ALL, "Ru");
     BinTreeIntNode* tree = nullptr;
 
-    fopen_s(&file, "balance.txt", "r+");
+    file = fopen("balance.txt", "r");
 
     if (file == nullptr)
     {
@@ -113,6 +114,8 @@ int main()
     const int count = 15;
 
     tree = BalanceTree(count);
+    fclose(file);
+    printBinTree(tree);
 
     return 0;
 }   
