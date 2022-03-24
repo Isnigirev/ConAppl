@@ -24,13 +24,12 @@ public:
 class RGBA 
 {
 public:
-    exception Box(int m_red, int m_green, int m_blue, int m_alpha)
+    void Box(int m_red, int m_green, int m_blue, int m_alpha)
     {
         this->m_red = m_red;
         this->m_green = m_green;
         this->m_blue = m_blue;
         this->m_alpha = m_alpha;
-        return this->m_red, this->m_green, this->m_blue, this->m_alpha;
     }   
 
 private:
@@ -38,6 +37,34 @@ private:
     std::uint8_t m_green = 0;
     std::uint8_t m_blue = 0;
     std::uint8_t m_alpha = 0;
+};
+
+class Stack
+{
+    int iArr[10] {};
+    int iCursor = 0;
+
+public:
+    void reset()
+    {
+
+    }
+
+    void push()
+    {
+
+    }
+
+    void pop()
+    {
+        
+    }
+
+    void print()
+    {
+
+    }
+
 };
 
 int main()
