@@ -43,6 +43,11 @@ public:
         std::cout << "red: " << int(this->m_red) << "\tgreen: " << int(this->m_green)
                   << "\nblue: "<< int(this->m_blue) << "\talpha: " << int(this->m_alpha) << std::endl;
     }
+
+    ~RGBA()
+    {
+        cout << "~RGBA";
+    }
 };
 
 class Stack
