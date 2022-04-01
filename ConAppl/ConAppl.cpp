@@ -1,56 +1,13 @@
 ﻿#include <iostream>
-#include <cstdint>
+
 
 using namespace std;
 
-class Power 
-{
-    int iVoltage = 12;
-    int iDegree = 2;
+//3 Класса
+//Базовый класс Black Jeck
+//Производные классы Gamer и Croupier
 
-public:
-    void SetVoltageAndDegree(int iVoltage = 12, int iDegree = 2)
-    {
-        this->iVoltage = iVoltage;
-        this->iDegree = iDegree;
-    }
-
-    void Calculate()
-    {
-        std::cout << this->iVoltage * this->iDegree << std::endl;
-    }
-};
-
-class RGBA 
-{
-private:
-    std::uint8_t m_red = 0;
-    std::uint8_t m_green = 0;
-    std::uint8_t m_blue = 0;
-    std::uint8_t m_alpha = 0;
-
-public:
-    RGBA (int m_red, int m_green, int m_blue, int m_alpha)
-    {
-        this->m_red = m_red;
-        this->m_green = m_green;
-        this->m_blue = m_blue;
-        this->m_alpha = m_alpha;
-    }
-
-    void print()
-    {
-        std::cout << "red: " << int(this->m_red) << "\tgreen: " << int(this->m_green)
-                  << "\nblue: "<< int(this->m_blue) << "\talpha: " << int(this->m_alpha) << std::endl;
-    }
-
-    ~RGBA()
-    {
-        cout << "~RGBA";
-    }
-};
-
-class Stack
+class Black Jeck
 {
     int iArr[10];
     int iCursor = 0;
