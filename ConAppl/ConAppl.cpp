@@ -6,64 +6,90 @@ using namespace std;
 //Базовый класс Black Jeck
 //Производные классы Gamer и Croupier
 
-class Black Jeck
+class BlackJeck
 {
-    int iArr[10];
+    char cSteck[56] {};
     int iCursor = 0;
+    int iSummCash = 0;
+    int iSummPoint = 0;
 
 public:
-    void reset()
+    bool push(char cCardDeck[])
     {
-        for (int i = 0; i < 10; i++)
-        {
-            iArr[i] = 0;
-        }
+        int i = 0;
 
-        iCursor = 0;
+        do
+        {
+            if (cCardDeck[i] != 0)
+            {
+                cSteck[iCursor++] = cCardDeck[i];
+                return true;
+            }
+            else
+            {
+                i++;
+            }
+
+        } while (i >= 56);
+
+        return false;
     }
 
-    bool push(int a)
+    int SummPoint()
     {
-        if (iCursor >= 10)
-        {
-            std::cout << "Стек переполнен" << std::endl;
-            return false;
-        }
-        else
-        {
-            iArr[iCursor++] = a;
-            return true;
-        }
-    }
-
-    void pop() 
-    {
-        if (iCursor < 0)
-        {
-            std::cout << "В стеке не осталось элементов для высвобождения" << std::endl;
-        }
-        else
-        {
-            iArr[--iCursor] = 0;
-        }
-    }
-
-    void print()
-    {
-        std::cout << "(";
-
         for (int i = 0; i < iCursor; i++)
         {
-            std::cout << iArr[i];
+            this->iSummPoint += this->cSteck[i];
         }
 
-        std::cout << ")" << std::endl;
+        return this->iSummPoint;
+    }
+
+    void SummCash(int iCash)
+    {
+        this->iSummCash += iCash;
+    }
+
+    int ReturnCashint (int iCash)
+    {
+        return iCash = this->iSummCash;
+    }
+};
+
+class Croupier {};
+
+class Gamer 
+{
+    std::string stName;
+
+public:
+    std::string GetName(std::string stName)
+    {
+        this->stName = stName;
+        return this->stName;
     }
 };
 
 int main()
 {
     setlocale(LC_ALL, "Ru");
+
+    char cCardDeck[56]{ '1','2','3','4','5','6','7','8','9','10','L','K','V','A',
+                    '1','2','3','4','5','6','7','8','9','10','L','K','V','A',
+                    '1','2','3','4','5','6','7','8','9','10','L','K','V','A',
+                    '1','2','3','4','5','6','7','8','9','10','L','K','V','A', };
+    Gamer g;
+
+    string stName;
+    int iCash = 0;
+
+    cout << "Введите имя "<< endl;
+        
+    cin >> stName;
+    g.GetName(stName);
+
+
+
 
 
     return 0;
