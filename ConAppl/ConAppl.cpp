@@ -14,7 +14,7 @@ class BlackJeck
     int iSummPoint = 0;
 
 public:
-    bool push(char cCardDeck[])
+    bool GetCart(char cCardDeck[])
     {
         int i = 0;
 
@@ -50,15 +50,15 @@ public:
         this->iSummCash += iCash;
     }
 
-    int ReturnCashint (int iCash)
+    int ReturnCash (int iCash)
     {
         return iCash = this->iSummCash;
     }
 };
 
-class Croupier {};
+class Croupier : public BlackJeck {};
 
-class Gamer 
+class Gamer : public BlackJeck
 {
     std::string stName;
 
@@ -79,18 +79,31 @@ int main()
                     '1','2','3','4','5','6','7','8','9','10','L','K','V','A',
                     '1','2','3','4','5','6','7','8','9','10','L','K','V','A', };
     Gamer g;
+    Croupier c;
 
     string stName;
     int iCash = 0;
 
-    cout << "Введите имя "<< endl;
+    cout << "Введите имя " << endl;
         
     cin >> stName;
     g.GetName(stName);
 
+    cout << "\nВведите начальную ставку " << endl;
+
+    cin >> iCash;
+    c.SummCash (iCash);
+
+    g.
+
+
+    do
+    {
+        
 
 
 
+    } while (true);
 
     return 0;
 }   
