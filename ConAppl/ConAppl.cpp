@@ -108,6 +108,34 @@ public:
 
 //2
 
+class Car
+{
+    std::string tsCompany;
+    std::string stModel;
+
+public:
+    Car(std::string stCompany, std::string stModel)
+    {
+        this->tsCompany = stCompany;
+        this->stModel = stModel;
+    }
+};
+
+class PassangeCar : public Car
+{
+    
+};
+
+class Bus : public Car
+{
+
+};
+
+class Minivan : public PassangeCar, public Bus
+{
+
+};
+
 int main()
 {
     setlocale(LC_ALL, "Ru");
