@@ -114,26 +114,40 @@ class Car
     std::string stModel;
 
 public:
-    Car(std::string stCompany, std::string stModel)
+    Car()
     {
-        this->tsCompany = stCompany;
-        this->stModel = stModel;
+
     }
+
+    
 };
 
 class PassangeCar : public Car
 {
     
+public:
+    PassangeCar()
+    {
+
+    }
 };
 
 class Bus : public Car
 {
+public:
+    Bus()
+    {
 
+    }
 };
 
 class Minivan : public PassangeCar, public Bus
 {
+public: 
+    Minivan()
+    {
 
+    }
 };
 
 int main()
