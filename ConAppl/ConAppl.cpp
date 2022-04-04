@@ -200,7 +200,7 @@ public:
 
 class Fraction
 {
-    int iNumerator = 0;
+    int iNumerator;
     int iDenominator;
 
 public:
@@ -225,6 +225,11 @@ public:
         {
             this->iDenominator = iDenominator;
         }
+    }
+
+    double GetFraction() // перегрузить оператор
+    {
+        std:: cout << iNumerator 
     }
 };
 
