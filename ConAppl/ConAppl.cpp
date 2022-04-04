@@ -196,6 +196,38 @@ public:
     }
 };
 
+//3
+
+class Fraction
+{
+    int iNumerator = 0;
+    int iDenominator;
+
+public:
+    Fraction(int iNumerator, int iDenominator)
+    {
+        this->iNumerator = iNumerator;
+
+        if (iDenominator == 0)
+        {
+            do
+            {
+                std::cout << "Ошибка знаменатель равен 0!" << std::endl;
+                std::cout << "Введите чило повторно" << std::endl;
+
+                cin >> iDenominator;
+
+            } while (iDenominator != 0);
+
+            this->iDenominator = iDenominator;
+        }
+        else
+        {
+            this->iDenominator = iDenominator;
+        }
+    }
+};
+
 int main()
 {
     setlocale(LC_ALL, "Ru");
@@ -226,6 +258,13 @@ int main()
     PassangeBus.GetInfo();
     Minivan Mv("Neer", "Mv", 4, 4, 3);
     Mv.GetInfo();
+
+    cout << "3-> " << endl;
+
+    //3
+
+
+
 
     return 0;
 }   
