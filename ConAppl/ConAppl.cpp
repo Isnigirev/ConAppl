@@ -114,10 +114,16 @@ class Car
     std::string stModel;
 
 public:
-    Car(std::string stCompany = "Heda", std::string stModel = "Beta")
+    Car (std::string stCompany = "Neer", std::string stModel = "2b")
     {
         this->stCompany = stCompany;
         this->stModel = stModel;
+    }
+
+    virtual void GetInfoCompanyAndModel()
+    {
+        std::cout << "Company: " << stCompany << std::endl;
+        std::cout << "Model: " << stModel << std::endl;
     }
 };
 
@@ -128,14 +134,15 @@ class PassangeCar : public Car
     double dEngineCapacity = 0;
 
 public:
-    PassangeCar(int iDoor = 4, int iEar = 4, double dEngineCapacity = 0.0)
+    PassangeCar(std::string stCompany = "Neer", std::string stModel = "2b",int iDoor = 4, int iEar = 4, double dEngineCapacity = 0.0)
+                : Car (stCompany = "Neer", stModel = "2b")
     {
         this->iDoor = iDoor;
         this->iEar = iEar;
         this->dEngineCapacity = dEngineCapacity;
     }
 
-    void GetInfo()
+    virtual void GetInfo()
     {
         std::cout << "Doors: " << iDoor << std::endl;
         std::cout << "Ears: " << iEar << std::endl;
@@ -150,14 +157,15 @@ class Bus : public Car
     double dEngineCapacity = 0;
 
 public:
-    Bus(int iDoor = 3, int iEar = 4, double dEngineCapacity = 0.0)
+    Bus(std::string stCompany = "Neer", std::string stModel = "2b", int iDoor = 4, int iEar = 4, double dEngineCapacity = 0.0)
+        : Car(stCompany = "Neer", stModel = "2b")
     {
         this->iDoor = iDoor;
         this->iEar = iEar;
         this->dEngineCapacity = dEngineCapacity;
     }
 
-    void GetInfo()
+    virtual void GetInfo()
     {
         std::cout << "Doors: " << iDoor << std::endl;
         std::cout << "Ears: " << iEar << std::endl;
@@ -172,14 +180,15 @@ class Minivan : public PassangeCar, public Bus
     double dEngineCapacity = 0;
 
 public: 
-    Minivan(int iDoor = 3, int iEar = 4, double dEngineCapacity = 0.0)
+    Minivan(std::string stCompany = "Neer", std::string stModel = "2b", int iDoor = 4, int iEar = 4, double dEngineCapacity = 0.0)
+        : PassangeCar(stCompany = "Neer", stModel = "2b")
     {
         this->iDoor = iDoor;
         this->iEar = iEar;
         this->dEngineCapacity = dEngineCapacity;
     }
 
-    void GetInfo()
+    virtual void GetInfo()
     {
         std::cout << "Doors: " << iDoor << std::endl;
         std::cout << "Ears: " << iEar << std::endl;
@@ -209,9 +218,14 @@ int main()
 
     //2
 
-    PassangeCar Neer();
-    Bus PassangerBus();
-    Minivan Falcon();
+    PassangeCar B2("Neer", "B2", 4, 4, 2);
+    B2.GetInfoCompanyAndModel();
+    B2.GetInfo();
+    Bus PassangeBus("Neer", "PassangeBus", 3, 4, 4);
+    PassangeBus.GetInfoCompanyAndModel();
+    PassangeBus.GetInfo();
+    Minivan Mv("Neer", "Mv", 4, 4, 3);
+    Mv.GetInfo();
 
     return 0;
 }   
