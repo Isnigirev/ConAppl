@@ -110,43 +110,80 @@ public:
 
 class Car
 {
-    std::string tsCompany;
+    std::string stCompany;
     std::string stModel;
 
 public:
-    Car()
+    Car(std::string stCompany = "Heda", std::string stModel = "Beta")
     {
-
+        this->stCompany = stCompany;
+        this->stModel = stModel;
     }
-
-    
 };
 
 class PassangeCar : public Car
 {
-    
-public:
-    PassangeCar()
-    {
+    int iDoor = 0;
+    int iEar = 0;
+    double dEngineCapacity = 0;
 
+public:
+    PassangeCar(int iDoor = 4, int iEar = 4, double dEngineCapacity = 0.0)
+    {
+        this->iDoor = iDoor;
+        this->iEar = iEar;
+        this->dEngineCapacity = dEngineCapacity;
+    }
+
+    void GetInfo()
+    {
+        std::cout << "Doors: " << iDoor << std::endl;
+        std::cout << "Ears: " << iEar << std::endl;
+        std::cout << "Engine: " << dEngineCapacity << std::endl;
     }
 };
 
 class Bus : public Car
 {
-public:
-    Bus()
-    {
+    int iDoor = 0;
+    int iEar = 0;
+    double dEngineCapacity = 0;
 
+public:
+    Bus(int iDoor = 3, int iEar = 4, double dEngineCapacity = 0.0)
+    {
+        this->iDoor = iDoor;
+        this->iEar = iEar;
+        this->dEngineCapacity = dEngineCapacity;
+    }
+
+    void GetInfo()
+    {
+        std::cout << "Doors: " << iDoor << std::endl;
+        std::cout << "Ears: " << iEar << std::endl;
+        std::cout << "Engine: " << dEngineCapacity << std::endl;
     }
 };
 
 class Minivan : public PassangeCar, public Bus
 {
-public: 
-    Minivan()
-    {
+    int iDoor = 0;
+    int iEar = 0;
+    double dEngineCapacity = 0;
 
+public: 
+    Minivan(int iDoor = 3, int iEar = 4, double dEngineCapacity = 0.0)
+    {
+        this->iDoor = iDoor;
+        this->iEar = iEar;
+        this->dEngineCapacity = dEngineCapacity;
+    }
+
+    void GetInfo()
+    {
+        std::cout << "Doors: " << iDoor << std::endl;
+        std::cout << "Ears: " << iEar << std::endl;
+        std::cout << "Engine: " << dEngineCapacity << std::endl;
     }
 };
 
@@ -168,9 +205,13 @@ int main()
     s.area();
     rh.area();
 
+    cout << "2-> " << endl;
+
     //2
 
-
+    PassangeCar Neer();
+    Bus PassangerBus();
+    Minivan Falcon();
 
     return 0;
 }   
