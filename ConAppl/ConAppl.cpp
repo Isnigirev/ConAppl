@@ -227,10 +227,11 @@ public:
         }
     }
 
-    double GetFraction() // перегрузить оператор
+    void operator -- (const Fraction &f)
     {
-        std:: cout << iNumerator 
+        
     }
+
 };
 
 int main()
