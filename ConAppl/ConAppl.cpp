@@ -122,8 +122,8 @@ public:
         }
     }
 
-    const int GetValue(int a)
-    {   
+    const int GetValue(int a) //Временная переменная
+    {
         switch (a)
         {
         case Two:
@@ -176,12 +176,12 @@ class Hand
 public:
     void Add(Card)
     {
-        vector <Card> vCard;
+        vCard;
     }
 
     void Clear()
     {
-
+        vCard << clear;   
     }
 
     void GetValue()
