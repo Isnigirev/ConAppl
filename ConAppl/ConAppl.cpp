@@ -1,69 +1,138 @@
 ﻿#include <iostream>
-#include <vector>
 
-using namespace std;
+/*1. 
+* 
+Для него вызовите по отдельности методы доступа к полям класса Date, 
+а также выведите на экран данные всего объекта с помощью перегруженного оператора 
+вывода. 
 
-//1 
+Затем переместите ресурс, которым владеет указатель today в указатель date. 
 
-template <typename T>
+Проверьте, являются ли нулевыми указатели today и date 
+и выведите соответствующую информацию об этом в консоль.*/
 
-class Pair1
+//1
+class Date
 {
-    T one;
-    T two;
+	int iDay;
+	int iMonth;
+	int iYear;
 
 public:
-    Pair1(T first, T second)
-    {
-        one = first;
-        two = second;
-    }
+	Date(int day, int month, int year) : iDay(day), iMonth(month), iYear(year) {}
 
-    T first() const
-    {
-        return one;
-    }
+	int getDay() const
+	{
+		return iDay;
+	}
 
-    T second() const
-    {
-        return two;
-    }
+	int getMonth() const
+	{
+		return iMonth;
+	}
+
+	int getYear() const
+	{
+		return iYear;
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Date& d)
+	{
+		os << d.iDay << '.' << d.iMonth << '.' << d.iYear;
+
+		return os;
+	}
+};
+
+template <class T>
+class Ptr
+{
+	T* tPtr;
+public:
+	Ptr(T* ptr = nullptr) : tPtr(ptr) {}
+	~Ptr() { delete tPtr; }
+
+	Ptr(Ptr& p)
+	{
+		tPtr = p.tPtr;
+		p.tPtr = nullptr;
+	}
+
+	Ptr& operator=(Ptr& p)
+	{
+		if (&p == this)
+			return *this;
+
+		delete tPtr;
+		tPtr = p.tPtr;
+		p.tPtr = nullptr;
+
+		return *this;
+	}
+
+	T& operator*() const 
+	{ 
+		return *tPtr;
+	}
+
+	T* operator->() const 
+	{ 
+		return tPtr;
+	}
+
+	bool isNull() const 
+	{ 
+		return tPtr == nullptr;
+	}
 };
 
 //2
 
-template <typename T1, typename T2>
-class Pair
+const Ptr<Date>& ComparesDates(const Ptr<Date>& a, const Ptr<Date>& b)
 {
-    T1 one;
-    T2 two;
+	if (a->getYear() > b->getYear())
+	{
+		return a;
+	}
+	else if (a->getYear() < b->getYear())
+	{
+		return b;
+	}
+	else
+	{
+		if (a->getMonth() > b->getMonth())
+		{ 
+			return a;
+		}
+			
+		else if (a->getMonth() < b->getMonth())
+		{
+			return b;
+		}
+		else
+		{
+			if (a->getDay() > b->getDay())
+			{ 
+				return a;
+			}
+			else
+			{
+				return b;
+			}
+		}
+	}
+}
 
-public:
-    Pair(T1 first, T2 second)
-    {
-        one = first;
-        two = second;
-    }
-
-    T1 first() const
-    {
-        return one;
-    }
-
-    T2 second() const
-    {
-        return two;
-    }
-};
-
-//3
-
-template <typename T3>
-class StringValuePair : public Pair <std::string, T3>
+void SwapDates(Ptr<Date>& a, Ptr<Date>& b)
 {
-public:
-    StringValuePair(std::string first, T3 second) : Pair <std::string, T3>(first, second) {}
-};
+	Ptr<Date> temp(a);
+
+	a = b;
+
+	b = temp;
+}
+
+
 
 int main()
 {
@@ -71,34 +140,41 @@ int main()
 
     //1
 
-    Pair1 <int> p1(6, 9);
-    cout << "Pair1: " << p1.first() << ' ' << p1.second() << '\n';
+    Ptr<Date> today (new Date(17, 04, 2022));
 
-    const Pair1 <double> p2(3.4, 7.8);
-    cout << "Pair1: " << p2.first() << ' ' << p2.second() << '\n';
+    std::cout << "Day: " << today->getDay() << std::endl;
+    std::cout << "Month: " << today->getMonth() << std::endl;
+    std::cout << "Year: " << today->getYear() << std::endl;
+    std::cout << "today: " << *today << std::endl;
 
-    /*
-    Pair: 6 9
-    Pair: 3.4 7.8
-    */
+	Ptr<Date> date;
+
+    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+
+    date = today;
+
+    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+
+    std::cout << "date: " << *date << std::endl;
 
     //2
 
-    Pair <int, double> p3(6, 7.8);
-    cout << "Pair: " << p1.first() << ' ' << p1.second() << '\n';
+	Ptr<Date> date1(new Date(9, 01, 2022));
+	Ptr<Date> date2(new Date(10, 02, 2022));
+	Ptr<Date> date3(new Date(11, 03, 2022));
 
-    const Pair <double, int> p4(3.4, 5);
-    cout << "Pair: " << p2.first() << ' ' << p2.second() << '\n';
+	std::cout << *ComparesDates(date1, date2) << std::endl;
 
-    /*
-    Pair: 6 7.8
-    Pair: 3.4 5
-    */
+	SwapDates(date2, date3);
 
-    //3
+	std::cout << *ComparesDates(date1, date2) << std::endl;
 
-    StringValuePair <int> svp("Amazing", 7);
-    cout << "Pair: " << svp.first() << ' ' << svp.second() << '\n';
+	//3
+
+
+
 
     return 0;
 }
