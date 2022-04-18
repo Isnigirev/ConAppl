@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
+#include <algorithm>
 
 //1
 class Date
@@ -123,13 +124,13 @@ void SwapDates(Ptr<Date>& a, Ptr<Date>& b)
 }
 
 //////////////////////////////////////////////////////////////
-//5
+
 class Card
 {
     std::string stSuit;
     enum Suit
     {
-        Worms,
+        Worms = 1,
         Diamonds,
         Clubs,
         Peaks
@@ -138,7 +139,7 @@ class Card
     std::string stMapValue;
     enum MapValue
     {
-        Two,
+        Two = 1,
         Three,
         Four,
         Five,
@@ -157,9 +158,12 @@ class Card
 
     bool bMapMosition = 1; //(1 - face up 0 - shirt up)
 
-    void GetSuit()
+    void GetSuit(int iSuit = 0)
     {
-        int iSuit = rand() % 3;
+        if (iSuit == 0)
+        {
+            iSuit = rand() % 4;
+        }
         switch (iSuit)
         {
         case Worms:
@@ -179,10 +183,12 @@ class Card
         }
     }
 
-    void GetMapValue()
+    void GetMapValue(int iMapValue = 0)
     {
-        int iMapValue = rand() % 12;
-
+        if (iMapValue == 0)
+        {
+            iMapValue = rand() % 13;
+        }
         switch (iMapValue)
         {
         case Two:
@@ -243,10 +249,10 @@ class Card
     }
 
 public:
-    Card()
+    Card(int iSuit = 0, int iMapValue = 0)
     {
-        GetSuit();
-        GetMapValue();
+        GetSuit(iSuit);
+        GetMapValue(iMapValue);
     }
 
     bool Flip()
@@ -291,12 +297,10 @@ public:
 
 class Hand
 {
-    std::vector <Card*> vCard;
-
 public:
-    void Add()
+    void Add(int iSuit = 0, int iMapValue = 0)
     {
-        vCard.push_back(new Card());
+        vCard.push_back(new Card(iSuit, iMapValue));
     }
 
     void Clear()
@@ -326,8 +330,11 @@ public:
             vCard[i]->GetInfoCard();
         }
     }
+
+protected:
+    std::vector <Card*> vCard;
 };
-//5
+
 class GenericPlayer : public Hand
 {
     std::string stName;
@@ -338,7 +345,14 @@ public:
         this->stName = stName;
     }
 
-    virtual bool IsHitting() {}
+    virtual bool IsHitting() 
+    {
+        char a;
+        std::cout << "Взять карту? (y/n) \n";
+        std::cin >> a;
+
+        return (a == 'y' || a == 'Y') ? 1 : 0;
+    }
 
     bool IsBoosted()
     {
@@ -364,7 +378,6 @@ public:
     }
 };
 
-//3
 class Player : public GenericPlayer
 {
     GenericPlayer& p;
@@ -395,7 +408,6 @@ public:
     }
 };
 
-//4
 class House : public GenericPlayer
 {
     Hand& h;
@@ -419,42 +431,108 @@ public:
     }
 };
 
+/*3.  
+* 
+Класс Deck имеет 4 метода:
+• void Shuffle() - Метод, который тасует карты, можно использовать функцию из алгоритмов STL random_shuffle
+• vold Deal (Hand& aHand) - метод, который раздает в руку одну карту
+• void AddltionalCards (GenericPlayer& aGenerlcPlayer) - раздает игроку дополнительные карты до тех пор, 
+пока он может и хочет их получать
+
+Обратите внимание на применение полиморфизма. В каких методах применяется этот принцип ООП?*/
+
+class Deck : public Hand
+{    
+    Hand deck;
+    void Populate()
+    {
+        int iSuit = 1;
+
+        for (int iMapValue = 1; iMapValue < 14; iMapValue++)
+        {
+            deck.Add(iSuit, iMapValue);
+            if (iSuit == 4 && iMapValue == 13)
+            {
+                break;
+            }
+            else if (iMapValue == 13)
+            {
+                iSuit++;
+                iMapValue = 1;
+            }
+        }
+    }
+
+public:
+    Deck() { Populate();}
+
+    void Shuffle()
+    {
+        std::random_shuffle(vCard.begin(), vCard.end());
+    }
+
+    void Deal(Hand& aHand)
+    {
+        if (!vCard.empty())
+        {
+            aHand.Add(vCard.back());
+            vCard.pop_back();
+        }
+        else
+            std::cout << "Out of cards. Unable to deal.";
+    }
+
+    void AddltionalCards(GenericPlayer& aGenerlcPlayer)
+    {
+        std::cout << "\n";
+        while (!(aGenerlcPlayer.IsBoosted()) && aGenerlcPlayer.IsHitting())
+        {
+            Deal(aGenerlcPlayer);
+            std::cout << aGenerlcPlayer << "\n";
+
+            if (aGenerlcPlayer.IsBoosted())
+                aGenerlcPlayer.Bust();
+        }
+    }
+};
+
+
 int main()
 {
     setlocale(LC_ALL, "Ru");
 
     //1
 
-    Ptr<Date> today (new Date(17, 04, 2022));
+ //   Ptr<Date> today (new Date(17, 04, 2022));
 
-    std::cout << "Day: " << today->getDay() << std::endl;
-    std::cout << "Month: " << today->getMonth() << std::endl;
-    std::cout << "Year: " << today->getYear() << std::endl;
-    std::cout << "today: " << *today << std::endl;
+ //   std::cout << "Day: " << today->getDay() << std::endl;
+ //   std::cout << "Month: " << today->getMonth() << std::endl;
+ //   std::cout << "Year: " << today->getYear() << std::endl;
+ //   std::cout << "today: " << *today << std::endl;
 
-	Ptr<Date> date;
+	//Ptr<Date> date;
 
-    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
-    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+ //   std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+ //   std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
 
-    date = today;
+ //   date = today;
 
-    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
-    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+ //   std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+ //   std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
 
-    std::cout << "date: " << *date << std::endl;
+ //   std::cout << "date: " << *date << std::endl;
 
-    //2
+ //   //2
 
-	Ptr<Date> date1(new Date(9, 01, 2022));
-	Ptr<Date> date2(new Date(10, 02, 2022));
-	Ptr<Date> date3(new Date(11, 03, 2022));
+	//Ptr<Date> date1(new Date(9, 01, 2022));
+	//Ptr<Date> date2(new Date(10, 02, 2022));
+	//Ptr<Date> date3(new Date(11, 03, 2022));
 
-	std::cout << *ComparesDates(date1, date2) << std::endl;
+	//std::cout << *ComparesDates(date1, date2) << std::endl;
 
-	SwapDates(date2, date3);
+	//SwapDates(date2, date3);
 
-	std::cout << *ComparesDates(date1, date2) << std::endl;
+	//std::cout << *ComparesDates(date1, date2) << std::endl;
 
 	//3
 
