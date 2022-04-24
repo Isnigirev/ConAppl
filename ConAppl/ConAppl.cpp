@@ -600,72 +600,73 @@ int main()
 {
     setlocale(LC_ALL, "Ru");
 
-    std::cout << "\tWelcome to Blackjack!\n";
+    //1
 
-    int numPlayers = 1;
-    /*while (numPlayers < 1 || numPlayers > 7)
+    Ptr<Date> today (new Date(17, 04, 2022));
+
+    std::cout << "Day: " << today->getDay() << std::endl;
+    std::cout << "Month: " << today->getMonth() << std::endl;
+    std::cout << "Year: " << today->getYear() << std::endl;
+    std::cout << "today: " << *today << std::endl;
+
+	Ptr<Date> date;
+
+    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+
+    date = today;
+
+    std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
+    std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
+
+    std::cout << "date: " << *date << std::endl;
+
+    //2
+
+	Ptr<Date> date1(new Date(9, 01, 2022));
+	Ptr<Date> date2(new Date(10, 02, 2022));
+	Ptr<Date> date3(new Date(11, 03, 2022));
+
+	std::cout << *ComparesDates(date1, date2) << std::endl;
+
+	SwapDates(date2, date3);
+
+	std::cout << *ComparesDates(date1, date2) << std::endl;
+
+	//3
+
+    std::cout << "\tДобропожаловать в Blackjack!\n";
+
+    int numPlayers = 0;
+
+    while (numPlayers < 1 || numPlayers > 7)
     {
-        std::cout << "How many players? (1 - 7): ";
+        std::cout << "Сколько игроков? (1 - 7): ";
         std::cin >> numPlayers;
-    }*/
+    }
 
     std::vector<std::string> names;
     std::string name;
 
-    //for (int i = 0; i < numPlayers; ++i)
-    //{
-    //    std::cout << "Enter player name: ";
-    //    std::cin >> name;
-    //    names.push_back(name);
-    //}
-    names.push_back("11");
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        std::cout << "Введите имя игрока: ";
+        std::cin >> name;
+        names.push_back(name);
+    }
+
     std::cout << "\n";
 
     Game aGame(names);
-    char again = 'y';
-    while (again != 'n' || again != 'N')
+    char cC;
+
+    do
     {
         aGame.play();
-        std::cout << "\nDo you want to play again? (Y/N): ";
-        std::cin >> again;
-    }
+        std::cout << "\nВы хотите играть снова? (y/n): ";
+        std::cin >> cC;
 
-    //1
-
- //   Ptr<Date> today (new Date(17, 04, 2022));
-
- //   std::cout << "Day: " << today->getDay() << std::endl;
- //   std::cout << "Month: " << today->getMonth() << std::endl;
- //   std::cout << "Year: " << today->getYear() << std::endl;
- //   std::cout << "today: " << *today << std::endl;
-
-	//Ptr<Date> date;
-
- //   std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
- //   std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
-
- //   date = today;
-
- //   std::cout << "today is " << (today.isNull() ? "null\n" : "not null\n");
- //   std::cout << "date is " << (date.isNull() ? "null\n" : "not null\n");
-
- //   std::cout << "date: " << *date << std::endl;
-
- //   //2
-
-	//Ptr<Date> date1(new Date(9, 01, 2022));
-	//Ptr<Date> date2(new Date(10, 02, 2022));
-	//Ptr<Date> date3(new Date(11, 03, 2022));
-
-	//std::cout << *ComparesDates(date1, date2) << std::endl;
-
-	//SwapDates(date2, date3);
-
-	//std::cout << *ComparesDates(date1, date2) << std::endl;
-
-	//3
-
-
+    } while (cC != 'n' && cC != 'N');
 
 
     return 0;
