@@ -156,14 +156,10 @@ class Card
 
     int Value;
 
-    bool bMapMosition = 1; //(1 - face up 0 - shirt up)
+    bool bMapMosition = 0; //(1 - face up 0 - shirt up)
 
-    void GetSuit(int iSuit = 0)
+    void GetSuit(int iSuit)
     {
-        if (iSuit == 0)
-        {
-            iSuit = rand() % 4;
-        }
         switch (iSuit)
         {
         case Worms:
@@ -183,12 +179,8 @@ class Card
         }
     }
 
-    void GetMapValue(int iMapValue = 0)
+    void GetMapValue(int iMapValue)
     {
-        if (iMapValue == 0)
-        {
-            iMapValue = rand() % 13;
-        }
         switch (iMapValue)
         {
         case Two:
@@ -249,38 +241,30 @@ class Card
     }
 
 public:
-    Card(int iSuit = 0, int iMapValue = 0)
+    Card(int iSuit, int iMapValue)
     {
         GetSuit(iSuit);
         GetMapValue(iMapValue);
     }
 
-    bool Flip()
+    friend std::ostream& operator<<(std::ostream& os, const Card& c)
     {
-        if (bMapMosition == 1)
+        if (c.bMapMosition == 1)
         {
-            std::cout << "Карта перевернута рубашкой вверх\n";
-            return bMapMosition = 0;
+            std::cout << "XX--";
+            std::cout << "XX";
         }
         else
         {
-            std::cout << "Карта перевернута лицом вверх\n";
-            return bMapMosition = 1;
+            std::cout << c.stMapValue << "--";
+            std::cout << c.stSuit;
         }
+        return os;
     }
 
-    friend bool Flip(Card& c)
+    void Flip()
     {
-        if (c.Flip() == 1)
-        {
-            std::cout << "XX\n";
-            std::cout << c.stSuit;
-        }
-        else
-        {
-            std::cout << c.stMapValue;
-            std::cout << c.stSuit;
-        }
+        (bMapMosition == 1) ? bMapMosition = 0 : bMapMosition = 1;
     }
 
     void GetInfoCard() const
@@ -289,23 +273,26 @@ public:
         std::cout << "\tМасть: " << stSuit;
     }
 
-    int GetValue() const
+    int GetValue() const 
     {
-        return Value;
+        return Value; 
     }
 };
 
 class Hand
 {
+protected:
+    std::vector <Card*> vCard;
+
 public:
-    void Add(int iSuit = 0, int iMapValue = 0)
-    {
-        vCard.push_back(new Card(iSuit, iMapValue));
+    void Add(Card *card) 
+    { 
+        vCard.push_back(new Card(*card)); 
     }
 
-    void Clear()
-    {
-        vCard.clear();
+    void Clear() 
+    { 
+        vCard.clear(); 
     }
 
     int GetValue() const
@@ -314,7 +301,14 @@ public:
 
         for (int i = 0; i < vCard.size(); i++)
         {
-            iCounter += vCard[i]->GetValue();
+            if (vCard[i]->GetValue() == 'A' && iCounter < 21)
+            {
+                iCounter += 11;
+            }
+            else
+            {
+                iCounter += vCard[i]->GetValue();
+            }
         }
 
         return iCounter;
@@ -330,22 +324,41 @@ public:
             vCard[i]->GetInfoCard();
         }
     }
-
-protected:
-    std::vector <Card*> vCard;
 };
 
 class GenericPlayer : public Hand
 {
     std::string stName;
 
-public:
-    GenericPlayer(std::string stName)
+    friend std::ostream& operator<<(std::ostream& os, const GenericPlayer& aGenericPlayer)
     {
-        this->stName = stName;
+        os << aGenericPlayer.stName << ":\t";
+
+        std::vector<Card*>::const_iterator vCard;
+
+        if (!aGenericPlayer.vCard.empty())
+        {
+            for (vCard = aGenericPlayer.vCard.begin(); vCard != aGenericPlayer.vCard.end(); ++vCard)
+            {
+                os << *(*vCard) << "\t";
+            }
+            if (aGenericPlayer.GetValue() != 0)
+            {
+                std::cout << "Сумма очков (" << aGenericPlayer.GetValue() << ")";
+            }
+        }
+        else
+        {
+            os << "<empty>";
+        }
+
+        return os;
     }
 
-    virtual bool IsHitting() 
+public:
+    GenericPlayer(const std::string& stName) : stName(stName) { }
+
+    virtual bool IsHitting()
     {
         char a;
         std::cout << "Взять карту? (y/n) \n";
@@ -356,8 +369,7 @@ public:
 
     bool IsBoosted()
     {
-        Hand h;
-        return (h.GetValue() > 21) ? 1 : 0;
+        return (GetValue() > 21) ? 1 : 0; //1 Перебор  
     }
 
     void Bust()
@@ -373,18 +385,19 @@ public:
     friend bool Flip(GenericPlayer& g, Hand& h)
     {
         std::cout << g.stName << "\n";
-
-        std::cout << "Сумма очков: " << h.GetValue();
+        h.GetInfoCardBoard();
+        std::cout << "\nСумма очков: " << h.GetValue();
     }
 };
 
 class Player : public GenericPlayer
 {
-    GenericPlayer& p;
 
 public:
-    virtual bool isHitting() const
-    {
+    Player(const std::string& stName) : GenericPlayer(stName) { }
+
+    bool IsHitting() override
+    { 
         char a;
         std::cout << "Взять карту? (y/n) \n";
         std::cin >> a;
@@ -394,63 +407,54 @@ public:
 
     void Win() const
     {
-        std::cout << p.GetName() << " Выйграл!\n";
+        std::cout << GetName() << " Выйграл!\n";
     }
 
     void Lose() const
     {
-        std::cout << p.GetName() << " Проиграл!\n";
+        std::cout << GetName() << " Проиграл!\n";
     }
 
     void Push() const
     {
-        std::cout << p.GetName() << " Сыграл в ничью!\n";
+        std::cout << GetName() << " Сыграл в ничью!\n";
     }
 };
 
 class House : public GenericPlayer
 {
-    Hand& h;
 public:
-    virtual bool isHitting() const
+    House() : GenericPlayer ("House") { }
+
+    bool IsHitting() override
     {
-        if (h.GetValue() < 16)
+        return (GetValue() < 16) ? 1 : 0;
+    }
+
+    void FlipFirstCard() const
+    {
+        if (!(vCard.empty()))
         {
-            h.Add();
-            return 1;
+            vCard.front()->Flip();
         }
         else
         {
-            return 0;
+            std::cout << "Карт больше нет!\n";
         }
-    }
-
-    bool FlipFirstCard() const
-    {
-        return 1;
     }
 };
 
-/*3.  
-* 
-Класс Deck имеет 4 метода:
-• void Shuffle() - Метод, который тасует карты, можно использовать функцию из алгоритмов STL random_shuffle
-• vold Deal (Hand& aHand) - метод, который раздает в руку одну карту
-• void AddltionalCards (GenericPlayer& aGenerlcPlayer) - раздает игроку дополнительные карты до тех пор, 
-пока он может и хочет их получать
-
-Обратите внимание на применение полиморфизма. В каких методах применяется этот принцип ООП?*/
-
 class Deck : public Hand
 {    
-    Hand deck;
     void Populate()
     {
         int iSuit = 1;
+        
+        Clear();
 
         for (int iMapValue = 1; iMapValue < 14; iMapValue++)
         {
-            deck.Add(iSuit, iMapValue);
+            Add(new Card(iSuit, iMapValue));
             if (iSuit == 4 && iMapValue == 13)
             {
                 break;
@@ -473,26 +477,121 @@ public:
 
     void Deal(Hand& aHand)
     {
-        if (!vCard.empty())
-        {
+       if (!vCard.empty())
+       {
             aHand.Add(vCard.back());
             vCard.pop_back();
-        }
-        else
-            std::cout << "Out of cards. Unable to deal.";
+       }
+       else
+       {
+            std::cout << "Карт больше нет!";
+       }
     }
 
     void AddltionalCards(GenericPlayer& aGenerlcPlayer)
     {
-        std::cout << "\n";
         while (!(aGenerlcPlayer.IsBoosted()) && aGenerlcPlayer.IsHitting())
         {
             Deal(aGenerlcPlayer);
-            std::cout << aGenerlcPlayer << "\n";
-
+            
             if (aGenerlcPlayer.IsBoosted())
+            {
                 aGenerlcPlayer.Bust();
+            }   
         }
+    }
+};
+
+class Game
+{
+    Deck deck;
+    House house;
+    std::vector <Player> vPlayerName;
+
+public:
+    Game(const std::vector <std::string> vPlName)
+    {
+        std::vector<std::string>::const_iterator pName;
+
+        for (pName = vPlName.begin(); pName != vPlName.end(); ++pName)
+        {
+            vPlayerName.push_back(Player(*pName));
+        }
+
+        deck.Shuffle();
+    }
+
+    void play()
+    {
+        std::vector<Player>::iterator vPlayer;
+
+        for (int i = 0; i < 2; ++i)
+        {
+            for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+            {
+                deck.Deal(*vPlayer);
+            }  
+
+            deck.Deal(house);
+        }
+
+        house.FlipFirstCard();
+
+        for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+        {
+            std::cout << *vPlayer << std::endl;
+        }
+
+        std::cout << house << std::endl;
+
+        for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+        {
+            deck.AddltionalCards(*vPlayer);
+        }
+
+        house.FlipFirstCard();
+        std::cout << house << std::endl;
+        
+        deck.AddltionalCards(house);
+
+        if (house.IsBoosted())
+        {
+            for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+            {
+                if (!(vPlayer->IsBoosted()))
+                {
+                    vPlayer->Win();
+                }
+            }
+        }
+        else
+        {
+            for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+            {
+                if (!(vPlayer->IsBoosted()))
+                {
+                    if (vPlayer->GetValue() > house.GetValue())
+                    {
+                        vPlayer->Win();
+                    }
+                    else if (vPlayer->GetValue() < house.GetValue())
+                    {
+                        vPlayer->Lose();
+                    }
+                    else
+                    {
+                        vPlayer->Push();
+                    }
+                }
+            }
+        }
+
+        for (vPlayer = vPlayerName.begin(); vPlayer != vPlayerName.end(); ++vPlayer)
+        {
+            vPlayer->Clear();
+        }
+
+        house.Clear();
     }
 };
 
@@ -500,6 +599,36 @@ public:
 int main()
 {
     setlocale(LC_ALL, "Ru");
+
+    std::cout << "\tWelcome to Blackjack!\n";
+
+    int numPlayers = 1;
+    /*while (numPlayers < 1 || numPlayers > 7)
+    {
+        std::cout << "How many players? (1 - 7): ";
+        std::cin >> numPlayers;
+    }*/
+
+    std::vector<std::string> names;
+    std::string name;
+
+    //for (int i = 0; i < numPlayers; ++i)
+    //{
+    //    std::cout << "Enter player name: ";
+    //    std::cin >> name;
+    //    names.push_back(name);
+    //}
+    names.push_back("11");
+    std::cout << "\n";
+
+    Game aGame(names);
+    char again = 'y';
+    while (again != 'n' || again != 'N')
+    {
+        aGame.play();
+        std::cout << "\nDo you want to play again? (Y/N): ";
+        std::cin >> again;
+    }
 
     //1
 
